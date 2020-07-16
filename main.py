@@ -37,8 +37,10 @@ class MainWindow(QMainWindow):
         self.devices.listUsbPorts()
         self.devices.printUsbPorts()
         #pprint.pprint(self.devices.ports[0][0])
+        self.inPort = ''
+        self.inSerial = ''
 
-        #self.menuPort = QMenu()
+        #self.menuInPort = QMenu()
         
         if len(self.devices.ports) > 0:
             self.comports = self.devices.ports
@@ -53,8 +55,19 @@ class MainWindow(QMainWindow):
             self.connectAction.setObjectName('connectAction')
             self.connectAction.triggered.connect(self.on_connectAction_triggered)
             self.Serial = serial.Serial(self.comports[0][0], baudrate=9600, timeout=0)
-
             self.rxthread = RxThread(self.Serial, self.write_info)
+
+        if len(self.devices.ports) > 1:
+            self.menuInPort.clear()
+            for port in self.comports:
+                self.menuInPort.addAction(QAction(str(port[0]), self))
+        
+        if len(self.menuInPort.actions()) > 0:
+            print(' ................. ')
+            for act in self.menuInPort.actions():
+                self.inPort = act.text()
+                act.triggered.connect(self.common_ation_trigger)
+                print(self.inPort)
 
     def write_info(self, data_stream):
         if len(data_stream[0]) > 30:
@@ -107,6 +120,12 @@ class MainWindow(QMainWindow):
     def on_portaction_triggered(self):
         self.portname = self.portAction.text()
         print(str(self.portname))
+
+    def common_ation_trigger(self):
+        sender = self.sender()
+        print('sender : ' + sender.text())
+        self.inPort = sender.text()
+        self.inSerial = self.inPort
 
     isAutoScroll = True
     @Slot()

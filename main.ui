@@ -187,7 +187,14 @@
      </property>
      <addaction name="actionCom"/>
     </widget>
+    <widget class="QMenu" name="menuInPort">
+     <property name="title">
+      <string>InPort</string>
+     </property>
+     <addaction name="actionNone"/>
+    </widget>
     <addaction name="menuPort"/>
+    <addaction name="menuInPort"/>
    </widget>
    <addaction name="menuOps"/>
   </widget>
@@ -198,6 +205,11 @@
    </property>
    <property name="text">
     <string>COM</string>
+   </property>
+  </action>
+  <action name="actionNone">
+   <property name="text">
+    <string>None</string>
    </property>
   </action>
  </widget>
