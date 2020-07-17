@@ -43,7 +43,7 @@
            <widget class="QPushButton" name="btnScroll">
             <property name="geometry">
              <rect>
-              <x>260</x>
+              <x>170</x>
               <y>2</y>
               <width>41</width>
               <height>31</height>
@@ -156,6 +156,19 @@
             </property>
             <property name="segmentStyle">
              <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="btnTrap">
+            <property name="geometry">
+             <rect>
+              <x>210</x>
+              <y>2</y>
+              <width>41</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>S</string>
             </property>
            </widget>
           </widget>

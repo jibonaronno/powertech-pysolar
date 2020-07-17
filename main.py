@@ -36,13 +36,16 @@ class MainWindow(QMainWindow):
         self.devices = DetectDevices()
         self.devices.listUsbPorts()
         self.devices.printUsbPorts()
+        self.comports = self.devices.ports
         #pprint.pprint(self.devices.ports[0][0])
+        self.outPort = ''
         self.inPort = ''
         self.inSerial = ''
+        self.outSerial = ''
 
         #self.menuInPort = QMenu()
         
-        if len(self.devices.ports) > 0:
+        '''if len(self.devices.ports) > 0:
             self.comports = self.devices.ports
             self.portAction = QAction(str(self.comports[0][0]), self)
             self.portAction.setCheckable(True)
@@ -54,8 +57,20 @@ class MainWindow(QMainWindow):
             self.menuOps.addAction(self.connectAction)
             self.connectAction.setObjectName('connectAction')
             self.connectAction.triggered.connect(self.on_connectAction_triggered)
-            self.Serial = serial.Serial(self.comports[0][0], baudrate=9600, timeout=0)
-            self.rxthread = RxThread(self.Serial, self.write_info)
+            self.outSerial = serial.Serial(self.comports[0][0], baudrate=9600, timeout=0)
+            self.rxthread = RxThread(self.outSerial, self.write_info)'''
+
+        if len(self.devices.ports) > 0:
+            self.menuPort.clear()
+            for port in self.comports:
+                self.menuPort.addAction(QAction(str(port[0]), self))
+
+        if len(self.menuPort.actions()) > 0:
+            print(' Out ................. ')
+            for act in self.menuPort.actions():
+                self.outPort = act.text()
+                act.setCheckable(True)
+                act.triggered.connect(self.common_outport_ation_trigger)
 
         if len(self.devices.ports) > 1:
             self.menuInPort.clear()
@@ -63,14 +78,19 @@ class MainWindow(QMainWindow):
                 self.menuInPort.addAction(QAction(str(port[0]), self))
         
         if len(self.menuInPort.actions()) > 0:
-            print(' ................. ')
+            print(' In ................. ')
             for act in self.menuInPort.actions():
                 self.inPort = act.text()
-                act.triggered.connect(self.common_ation_trigger)
-                print(self.inPort)
+                act.setCheckable(True)
+                act.triggered.connect(self.common_inport_ation_trigger)
+
+        self.connectAction = QAction('Connect', self)
+        self.menuOps.addAction(self.connectAction)
+        self.connectAction.setObjectName('connectAction')
+        self.connectAction.triggered.connect(self.on_connectAction_triggered)
 
     def write_info(self, data_stream):
-        if len(data_stream[0]) > 30:
+        if len(data_stream[0]) > 40:
             return
         rcount = self.rxtable.rowCount()
         pprint.pprint(data_stream)
@@ -113,6 +133,11 @@ class MainWindow(QMainWindow):
 
 
     def on_connectAction_triggered(self):
+
+        self.inSerial = serial.Serial(self.inPort, baudrate=9600, timeout=0)
+
+        self.rxthread = RxThread(self.inSerial, self.write_info)
+
         self.rxthread.Start()
         #self.rxthread.thread.start()
         print('Connect Triggered')
@@ -121,11 +146,19 @@ class MainWindow(QMainWindow):
         self.portname = self.portAction.text()
         print(str(self.portname))
 
-    def common_ation_trigger(self):
+    def common_inport_ation_trigger(self):
         sender = self.sender()
-        print('sender : ' + sender.text())
+        #print('sender : ' + sender.text())
         self.inPort = sender.text()
+        print('IN : ' + self.inPort)
         self.inSerial = self.inPort
+
+    def common_outport_ation_trigger(self):
+        sender = self.sender()
+        #print('sender : ' + sender.text())
+        self.outPort = sender.text()
+        print('OUT : ' + self.outPort)
+        self.outSerial = self.outPort
 
     isAutoScroll = True
     @Slot()
