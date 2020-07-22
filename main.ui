@@ -24,6 +24,9 @@
        <layout class="QHBoxLayout" name="horizontalMain">
         <item>
          <widget class="QStackedWidget" name="rightStack">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
           <widget class="QWidget" name="page">
            <widget class="QTableWidget" name="rxtable">
             <property name="geometry">
@@ -43,7 +46,7 @@
            <widget class="QPushButton" name="btnScroll">
             <property name="geometry">
              <rect>
-              <x>170</x>
+              <x>80</x>
               <y>2</y>
               <width>41</width>
               <height>31</height>
@@ -158,21 +161,122 @@
              <enum>QLCDNumber::Flat</enum>
             </property>
            </widget>
-           <widget class="QPushButton" name="btnTrap">
+           <widget class="QPushButton" name="btnClrtbl">
             <property name="geometry">
              <rect>
-              <x>210</x>
+              <x>120</x>
               <y>2</y>
               <width>41</width>
               <height>31</height>
              </rect>
             </property>
             <property name="text">
-             <string>S</string>
+             <string>Ct</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="btnSnd">
+            <property name="geometry">
+             <rect>
+              <x>160</x>
+              <y>2</y>
+              <width>41</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Snd</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="btnSnd2">
+            <property name="geometry">
+             <rect>
+              <x>200</x>
+              <y>2</y>
+              <width>41</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Snd2</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="btnPage2">
+            <property name="geometry">
+             <rect>
+              <x>770</x>
+              <y>2</y>
+              <width>41</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>P2</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="btnMbus">
+            <property name="geometry">
+             <rect>
+              <x>250</x>
+              <y>2</y>
+              <width>41</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Mb1</string>
+            </property>
+           </widget>
+           <widget class="QLCDNumber" name="lcdinvvolt01">
+            <property name="geometry">
+             <rect>
+              <x>850</x>
+              <y>0</y>
+              <width>121</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(0, 255, 0);</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="digitCount">
+             <number>4</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
             </property>
            </widget>
           </widget>
-          <widget class="QWidget" name="page_2"/>
+          <widget class="QWidget" name="page_2">
+           <widget class="QPushButton" name="btnPage1">
+            <property name="geometry">
+             <rect>
+              <x>840</x>
+              <y>2</y>
+              <width>41</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>P1</string>
+            </property>
+           </widget>
+          </widget>
          </widget>
         </item>
        </layout>

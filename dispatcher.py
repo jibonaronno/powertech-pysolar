@@ -24,8 +24,28 @@ class RxThread(QObject):
         self.thread.started.connect(self.run)
         self.moveToThread(self.thread)
 
+        self.msg1 = []
+        self.msg2 = []
+        self.flagGlitch = False
+        self.flagCatch = False
+        self.flagModbus = False
+
     def Start(self):
         self.thread.start()
+
+    def sendGlitch(self, msg1, msg2):
+        self.msg1 = msg1
+        self.msg2 = msg2
+        self.flagGlitch = True
+
+    def sendCatch(self, msg1):
+        self.msg1 = msg1
+        self.flagCatch = True
+
+    def sendModbusMsg(self, msg1):
+        self.msg1 = msg1
+        self.flagModbus = True
+
 
     itm = []
     def timeout(self):
@@ -40,17 +60,42 @@ class RxThread(QObject):
         unit = b''
         time.sleep(3)
         print('Beep')
-        timer = threading.Timer(0.2, self.timeout)
+        timer = threading.Timer(0.05, self.timeout)
         #timer.start()
         while 1:
-
             try:
                 in_waiting = self.serialport.in_waiting
             except Exception as e:
                 print('Ex:0X07 : ' + str(e))
                 
             while in_waiting == 0:
-                time.sleep(0.1)
+                time.sleep(0.001)
+                
+                if self.flagGlitch:
+                    self.flagGlitch = False
+                    #self.serialport.write(self.msg)
+                    for mms in self.msg1:
+                        self.serialport.write([mms])
+                    time.sleep(0.075)
+                    for mms in self.msg1:
+                        self.serialport.write([mms])
+                    time.sleep(0.075)
+                    for mms in self.msg2:
+                        self.serialport.write([mms])
+                    time.sleep(0.075)
+                    for mms in self.msg2:
+                        self.serialport.write([mms])
+
+                if self.flagCatch:
+                    self.flagCatch = False
+                    for mms in self.msg1:
+                        self.serialport.write([mms])
+
+                if self.flagModbus:
+                    self.flagModbus = False
+                    for mms in self.msg1:
+                        self.serialport.write([mms])
+                
                 try:
                     in_waiting = self.serialport.in_waiting
                 except Exception as e:
@@ -61,13 +106,13 @@ class RxThread(QObject):
                 #pprint.pprint(self.itm)
                 if self.timerStopped:
                     del timer
-                    timer = threading.Timer(0.2, self.timeout)
+                    timer = threading.Timer(0.05, self.timeout)
                     #timer.cancel()
                     timer.start()
                     self.timerStopped = False
                 else:
                     #timer.cancel()
-                    timer.interval = 0.2
+                    timer.interval = 0.1
                     
             except Exception as e:
                 print('Ex in sensor Thread readline() 527 : ' + str(e))
