@@ -125,8 +125,8 @@ class MainWindow(QMainWindow):
             except:
                 print('ERR')'''
 
-    def connectModbus(self):
-        self.mbSerial = serial.Serial('COM10', baudrate=9600, timeout=0)
+    def connectModbus(self, modbusPort):
+        self.mbSerial = serial.Serial(modbusPort, baudrate=9600, timeout=0)
         self.mbusThread = RxThread(self.mbSerial, self.receiveModbus)
         self.mbusThread.Start()
         
@@ -207,6 +207,9 @@ class MainWindow(QMainWindow):
         self.inSerial = serial.Serial(self.inPort, baudrate=9600, timeout=0)
         self.rxthread = RxThread(self.inSerial, self.write_info)
         self.rxthread.Start()
+
+        self.connectModbus(self.outPort)
+
         #self.rxthread.thread.start()
         print('Connect Triggered')
 
