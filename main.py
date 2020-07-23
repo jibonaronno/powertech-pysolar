@@ -106,7 +106,7 @@ class MainWindow(QMainWindow):
 
         self.rightStack.setCurrentIndex(0)
 
-        self.connectModbus()
+        ##self.connectModbus()
 
         '''try:
             self.client = ModbusClient(method='rtu', port='COM10', timeout=0.5, baudrate=9600, parity='N')
