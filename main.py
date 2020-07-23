@@ -58,6 +58,9 @@ class MainWindow(QMainWindow):
         self.outSerial = ''
         self.rightStackIndex = 0
 
+        self.modbustimer = QTimer(self)
+        self.modbustimer.timeout.connect(self.modbustimer_tout)
+
         #self.menuInPort = QMenu()
         
         '''if len(self.devices.ports) > 0:
@@ -125,6 +128,9 @@ class MainWindow(QMainWindow):
             except:
                 print('ERR')'''
 
+    def modbustimer_tout(self):
+        self.on_btnMbus_clicked()
+
     def connectModbus(self, modbusPort):
         self.mbSerial = serial.Serial(modbusPort, baudrate=9600, timeout=0)
         self.mbusThread = RxThread(self.mbSerial, self.receiveModbus)
@@ -137,21 +143,28 @@ class MainWindow(QMainWindow):
         txt = ''
         hexd = []
         hexstr = ''
+        hstr = ''
+        ttr = []
         if len(data_stream) < 1:
             return
         for ttx in data_stream:
             for itx in ttx:
                 txt += '{:02X} '.format(int(itx))
+                hexd.append(itx)
                 if idx == 3 or idx == 4:
-                    hexd.append(itx)
                     hexstr += str(itx)
                 idx += 1
+        ttr = txt.split(' ')
         try:
-            self.invVoltage01 = int(hexstr, 16)
-        except:
-            print('0x000000000000000000000000000000000000000')
+            #hstr = '0x' + '{:02X}{:02X}'.format(int(hexd[3]), int(hexd[4]))
+            print(ttr[3] + ttr[4])
+            #print(str(int(hexstr, 16)))
+            self.invVoltage01 = int((ttr[3] + ttr[4]), 16)
+            self.lcdinvvolt01.display(self.invVoltage01)
+        except Exception as e:
+            print('0x0000 ' + str(e))
         print('Modbus : ' + txt)
-        self.lcdinvvolt01.display(self.invVoltage01)
+        
 
     def write_info(self, data_stream):
         if len(data_stream) < 1:
@@ -209,6 +222,9 @@ class MainWindow(QMainWindow):
         self.rxthread.Start()
 
         self.connectModbus(self.outPort)
+
+        time.sleep(3)
+        self.modbustimer.start(2000)
 
         #self.rxthread.thread.start()
         print('Connect Triggered')
