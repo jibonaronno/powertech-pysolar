@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1046</width>
-    <height>480</height>
+    <height>641</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>40</y>
+              <y>200</y>
               <width>1011</width>
               <height>371</height>
              </rect>
@@ -259,6 +259,150 @@
             </property>
             <property name="segmentStyle">
              <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+           <widget class="QLCDNumber" name="lcdkwhob">
+            <property name="geometry">
+             <rect>
+              <x>80</x>
+              <y>50</y>
+              <width>121</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(0, 255, 0);</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="digitCount">
+             <number>4</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>50</y>
+              <width>51</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>KWh-OB</string>
+            </property>
+           </widget>
+           <widget class="QLCDNumber" name="lcdkwhinv">
+            <property name="geometry">
+             <rect>
+              <x>330</x>
+              <y>50</y>
+              <width>121</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(0, 255, 0);</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="digitCount">
+             <number>4</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_2">
+            <property name="geometry">
+             <rect>
+              <x>260</x>
+              <y>50</y>
+              <width>61</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>KWh Inv IN</string>
+            </property>
+           </widget>
+           <widget class="QLCDNumber" name="lcdkwhinvout">
+            <property name="geometry">
+             <rect>
+              <x>550</x>
+              <y>50</y>
+              <width>121</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(0, 255, 0);</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="digitCount">
+             <number>4</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_3">
+            <property name="geometry">
+             <rect>
+              <x>470</x>
+              <y>50</y>
+              <width>71</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>KWh Inv OUT</string>
             </property>
            </widget>
           </widget>

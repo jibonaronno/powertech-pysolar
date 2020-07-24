@@ -27,6 +27,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QGr
 from portdetection import DetectDevices
 from dispatcher import RxThread
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+import struct
 
 #from pymodbus.client.asynchronous import Modbus
 
@@ -136,7 +137,7 @@ class MainWindow(QMainWindow):
         self.mbusThread = RxThread(self.mbSerial, self.receiveModbus)
         self.mbusThread.Start()
         
-    invVoltage01 = 0
+    invVoltage01 = 0.0
 
     def receiveModbus(self, data_stream):
         idx = 0
@@ -157,11 +158,18 @@ class MainWindow(QMainWindow):
         ttr = txt.split(' ')
         try:
             #hstr = '0x' + '{:02X}{:02X}'.format(int(hexd[3]), int(hexd[4]))
-            print(ttr[3] + ttr[4])
+            print(ttr[3] + ttr[4] + ttr[5] + ttr[6])
             #print(str(int(hexstr, 16)))
-            self.invVoltage01 = int((ttr[3] + ttr[4]), 16)
-            self.lcdinvvolt01.display(self.invVoltage01)
+            #self.invVoltage01 = float('0x' + (ttr[3] + ttr[4] + ttr[5] + ttr[6]))
+            #self.lcdinvvolt01.display(self.invVoltage01)
+            
+            print(str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0]))
+            #self.lcdkwhinv.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0])
+
+            self.lcdkwhinvout.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0])
+        
         except Exception as e:
+            #pass
             print('0x0000 ' + str(e))
         print('Modbus : ' + txt)
         
@@ -197,12 +205,17 @@ class MainWindow(QMainWindow):
 
         if len(str_int_digits) > 7:
             try:
+                #pprint.pprint(str_int_digits)
                 self.lcddcout.display(str(int(str_int_digits[5])))
                 self.lcddcin.display(str(int(str_int_digits[6])))
-                str_ampere = str_hex_digits[3][-1] + '.' + str_hex_digits[2][-1] + str_hex_digits[1][-1]
+                str_ampere = str(int(str_hex_digits[3][-2:], 16) - 128) # + '.' + str_hex_digits[2][-1] + str_hex_digits[1][-1]
+                print('Amp : '+str_hex_digits[3][-2:])
                 self.lcddcamp.display(float(str_ampere))
-            except:
-                print('exc - lcddcamp')
+                #pprint.pprint(str_hex_digits)
+                print('KWh : ' +  str_hex_digits[9][-2:]) #+ str(int(str_hex_digits[5][-2:], 16)))
+                self.lcdkwhob.display(int(str_hex_digits[9][-2:], 16))
+            except Exception as e:
+                print('exc - lcddcamp : ' + str_hex_digits[3] + ' : ' + str(e))
 
         self.rxtable.insertRow(rcount)
         self.rxtable.setItem(rcount,0, QTableWidgetItem(txt))
@@ -280,7 +293,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_btnMbus_clicked(self):
-        self.mbusThread.sendModbusMsg([0x01, 0x03, 0x7D, 0x10, 0x00, 0x01, 0x9D, 0xA3])
+        self.mbusThread.sendModbusMsg([0x01, 0x03, 0x7D, 0x50, 0x00, 0x02, 0xDC, 0x76])
         '''try:
             self.rr = self.client.read_holding_registers(32016, 1, unit=1)
         except Exception as e:

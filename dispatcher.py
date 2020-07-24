@@ -60,7 +60,7 @@ class RxThread(QObject):
         unit = b''
         time.sleep(3)
         print('Beep')
-        timer = threading.Timer(0.05, self.timeout)
+        timer = threading.Timer(0.1, self.timeout)
         #timer.start()
         while 1:
             try:
@@ -106,7 +106,7 @@ class RxThread(QObject):
                 #pprint.pprint(self.itm)
                 if self.timerStopped:
                     del timer
-                    timer = threading.Timer(0.05, self.timeout)
+                    timer = threading.Timer(0.1, self.timeout)
                     #timer.cancel()
                     timer.start()
                     self.timerStopped = False
