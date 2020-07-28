@@ -189,17 +189,18 @@ class MainWindow(QMainWindow):
             #self.invVoltage01 = float('0x' + (ttr[3] + ttr[4] + ttr[5] + ttr[6]))
             #self.lcdinvvolt01.display(self.invVoltage01)
             
-            print(str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4]))[0]))
+            #unpack does not work for 2 bytes
+            print(str(struct.unpack('!i', bytes.fromhex('00'+ttr[3] + ttr[4]))[0]))
 
             #Read 4 byte into 32 bits integer value
             #print(str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0]))
             
             #self.lcdkwhinv.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0])
 
-            self.PV1volt = str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4]))[0])
+            self.PV1volt = str(struct.unpack('!i', bytes.fromhex( '00' +ttr[3] + ttr[4]))[0])
             
             #Read 16bit integer
-            self.lcdkwhinvout.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4]))[0])
+            self.lcdkwhinvout.display(struct.unpack('!i', bytes.fromhex( '00' + ttr[3] + ttr[4]))[0])
 
             #Read 32Bit integer
             #self.lcdkwhinvout.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0])
