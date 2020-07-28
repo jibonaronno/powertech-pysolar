@@ -148,7 +148,7 @@ class MainWindow(QMainWindow):
                 print('ERR')'''
 
     def sched_timeout(self):
-        res = req.get('http://nervoustech.com:8090/gateway/pinlog.php?dckwhout='+ self.outback_kwh +'&dcinob='+ self.outback_dcin +'&dcoutob=' + self.outback_dcout + '&ackwhsun=0.0' + '&alarmsun=0x00')
+        res = req.get('http://nervoustech.com:8090/gateway/pinlog.php?dckwhout='+ self.outback_kwh +'&dcinob='+ self.outback_dcin +'&dcoutob=' + self.outback_dcout + '&ackwhsun=0.0' + '&alarmsun=0x00' + '&pv1volt=' + self.PV1volt)
         if 'ok' in res:
             print('Uploaded')
         else:
@@ -184,14 +184,25 @@ class MainWindow(QMainWindow):
         try:
             #hstr = '0x' + '{:02X}{:02X}'.format(int(hexd[3]), int(hexd[4]))
             print(ttr[3] + ttr[4] + ttr[5] + ttr[6])
+            ######print(ttr[3] + ttr[4])
             #print(str(int(hexstr, 16)))
             #self.invVoltage01 = float('0x' + (ttr[3] + ttr[4] + ttr[5] + ttr[6]))
             #self.lcdinvvolt01.display(self.invVoltage01)
             
-            print(str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0]))
+            print(str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4]))[0]))
+
+            #Read 4 byte into 32 bits integer value
+            #print(str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0]))
+            
             #self.lcdkwhinv.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0])
 
-            self.lcdkwhinvout.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0])
+            self.PV1volt = str(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4]))[0])
+            
+            #Read 16bit integer
+            self.lcdkwhinvout.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4]))[0])
+
+            #Read 32Bit integer
+            #self.lcdkwhinvout.display(struct.unpack('!i', bytes.fromhex(ttr[3] + ttr[4] + ttr[5] + ttr[6]))[0])
         
         except Exception as e:
             #pass
@@ -202,6 +213,7 @@ class MainWindow(QMainWindow):
     outback_dcout = ''
     outback_current = ''
     outback_kwh = ''
+    self.PV1volt = ''
 
     def write_info(self, data_stream):
         if len(data_stream) < 1:
@@ -331,7 +343,12 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_btnMbus_clicked(self):
-        self.mbusThread.sendModbusMsg([0x01, 0x03, 0x7D, 0x50, 0x00, 0x02, 0xDC, 0x76])
+        #Read KWh
+        #self.mbusThread.sendModbusMsg([0x01, 0x03, 0x7D, 0x50, 0x00, 0x02, 0xDC, 0x76])
+
+        #Read PV1 Volt
+        self.mbusThread.sendModbusMsg([0x01, 0x03, 0x7D, 0x10, 0x00, 0x01, 0x9D, 0xA3])
+        
         '''try:
             self.rr = self.client.read_holding_registers(32016, 1, unit=1)
         except Exception as e:
