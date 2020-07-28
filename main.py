@@ -62,6 +62,9 @@ class MainWindow(QMainWindow):
         self.modbustimer = QTimer(self)
         self.modbustimer.timeout.connect(self.modbustimer_tout)
 
+        self.sched_timer = QTimer(self)
+        self.sched_timer.timeout.connect(self.sched_timeout)
+
         #self.menuInPort = QMenu()
         
         '''if len(self.devices.ports) > 0:
@@ -110,6 +113,8 @@ class MainWindow(QMainWindow):
 
         self.rightStack.setCurrentIndex(0)
 
+        self.sched_timer.start(10000)
+
         ##self.connectModbus()
 
         '''try:
@@ -128,6 +133,13 @@ class MainWindow(QMainWindow):
                 pprint.pprint(self.rr.registers)
             except:
                 print('ERR')'''
+
+    def sched_timeout(self):
+        res = req.get('http://nervoustech.com:8090/gateway/pinlog.php?dckwhout='+ self.outback_kwh +'&ackwout=55.0&ackwhout=20.0')
+        if 'ok' in res:
+            print('Uploaded')
+        else:
+            print(res)
 
     def modbustimer_tout(self):
         self.on_btnMbus_clicked()
@@ -173,10 +185,10 @@ class MainWindow(QMainWindow):
             print('0x0000 ' + str(e))
         print('Modbus : ' + txt)
         
-    outback_dcin = 0.0
-    outback_dcout = 0.0
-    outback_current = 0.0
-    outback_kwh = 0.0
+    outback_dcin = ''
+    outback_dcout = ''
+    outback_current = ''
+    outback_kwh = ''
 
     def write_info(self, data_stream):
         if len(data_stream) < 1:
@@ -210,6 +222,7 @@ class MainWindow(QMainWindow):
         if len(str_int_digits) > 7:
             try:
                 #pprint.pprint(str_int_digits)
+
                 self.lcddcout.display(str(int(str_int_digits[5])))
                 self.lcddcin.display(str(int(str_int_digits[6])))
                 str_ampere = str(int(str_hex_digits[3][-2:], 16) - 128) # + '.' + str_hex_digits[2][-1] + str_hex_digits[1][-1]
@@ -218,6 +231,11 @@ class MainWindow(QMainWindow):
                 #pprint.pprint(str_hex_digits)
                 print('KWh : ' +  str_hex_digits[9][-2:]) #+ str(int(str_hex_digits[5][-2:], 16)))
                 self.lcdkwhob.display(int(str_hex_digits[9][-2:], 16))
+
+                self.outback_dcout = str(int(str_int_digits[5]))
+                self.outback_dcin = str(int(str_int_digits[6]))
+                self.outback_current = str(int(str_hex_digits[3][-2:], 16) - 128)
+                self.outback_kwh = str(int(str_hex_digits[9][-2:], 16))
             except Exception as e:
                 print('exc - lcddcamp : ' + str_hex_digits[3] + ' : ' + str(e))
 
