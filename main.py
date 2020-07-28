@@ -48,11 +48,26 @@ class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         self.widget = uic.loadUi(_UI, self)
+        self.port_outback = 'NA'
+        self.port_sun2000 = 'NA'
         self.devices = DetectDevices()
         self.devices.listUsbPorts()
-        self.devices.printUsbPorts()
+        #self.devices.printUsbPorts()
         self.comports = self.devices.ports
-        #pprint.pprint(self.devices.ports[0][0])
+        for port in self.devices.ports:
+            if 'USB' in port[2]:
+                print(port[2])
+                if 'SER=0001' in port[2]:
+                    print(' : PORT OUTBACK : ' + port[0])
+                    self.port_outback = port[0]
+                if 'SER=6' in port[2]:
+                    print(' : PORT SUN2000 : ' + port[0])
+                    self.port_sun2000 = port[0]
+
+            for prt in port:
+                pass
+                #pprint.pprint(prt)
+                #print(str(prt))
         self.outPort = ''
         self.inPort = ''
         self.inSerial = ''
@@ -113,8 +128,6 @@ class MainWindow(QMainWindow):
 
         self.rightStack.setCurrentIndex(0)
 
-        self.sched_timer.start(10000)
-
         ##self.connectModbus()
 
         '''try:
@@ -135,7 +148,7 @@ class MainWindow(QMainWindow):
                 print('ERR')'''
 
     def sched_timeout(self):
-        res = req.get('http://nervoustech.com:8090/gateway/pinlog.php?dckwhout='+ self.outback_kwh +'&ackwout=55.0&ackwhout=20.0')
+        res = req.get('http://nervoustech.com:8090/gateway/pinlog.php?dckwhout='+ self.outback_kwh +'&dcinob='+ self.outback_dcin +'&dcoutob=' + self.outback_dcout + '&ackwhsun=0.0' + '&alarmsun=0x00')
         if 'ok' in res:
             print('Uploaded')
         else:
@@ -250,6 +263,8 @@ class MainWindow(QMainWindow):
 
 
     def on_connectAction_triggered(self):
+        self.inPort = self.port_outback
+        self.outPort = self.port_sun2000
 
         #self.inSerial = serial.Serial(self.inPort, baudrate=9600, timeout=0, parity=serial.PARITY_SPACE, bytesize=serial.SEVENBITS, stopbits=serial.STOPBITS_ONE)
         self.inSerial = serial.Serial(self.inPort, baudrate=9600, timeout=0)
@@ -259,7 +274,8 @@ class MainWindow(QMainWindow):
         self.connectModbus(self.outPort)
 
         time.sleep(3)
-        self.modbustimer.start(2000)
+        self.modbustimer.start(5000)
+        self.sched_timer.start(10000)
 
         #self.rxthread.thread.start()
         print('Connect Triggered')
