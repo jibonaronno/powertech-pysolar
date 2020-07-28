@@ -57,10 +57,10 @@ class MainWindow(QMainWindow):
         for port in self.devices.ports:
             if 'USB' in port[2]:
                 print(port[2])
-                if 'SER=0001' in port[2]:
+                if 'LOCATION=1-1.3' in port[2]:
                     print(' : PORT OUTBACK : ' + port[0])
                     self.port_outback = port[0]
-                if 'SER=6' in port[2]:
+                if 'LOCATION=1-1.2' in port[2]:
                     print(' : PORT SUN2000 : ' + port[0])
                     self.port_sun2000 = port[0]
 
