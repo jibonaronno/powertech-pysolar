@@ -128,6 +128,10 @@ class MainWindow(QMainWindow):
 
         self.rightStack.setCurrentIndex(0)
 
+        time.sleep(30)
+
+        self.on_connectAction_triggered()
+
         ##self.connectModbus()
 
         '''try:
