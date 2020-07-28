@@ -186,7 +186,7 @@ class MainWindow(QMainWindow):
             print(ttr[3] + ttr[4] + ttr[5] + ttr[6])
             ######print(ttr[3] + ttr[4])
             #print(str(int(hexstr, 16)))
-            self.invVoltage01 = float('0x' + (ttr[3] + ttr[4] + ttr[5] + ttr[6]))
+            self.invVoltage01 = int('0x' + (ttr[3] + ttr[4]))
             self.lcdinvvolt01.display(self.invVoltage01)
             self.PV1volt = str(self.invVoltage01)
 
