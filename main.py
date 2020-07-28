@@ -29,6 +29,8 @@ from dispatcher import RxThread
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 import struct
 
+import requests as req
+
 #from pymodbus.client.asynchronous import Modbus
 
 _UI = join(dirname(abspath(__file__)), 'main.ui')
@@ -41,8 +43,6 @@ logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 '''
-
-UNIT = 0x1
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -173,6 +173,10 @@ class MainWindow(QMainWindow):
             print('0x0000 ' + str(e))
         print('Modbus : ' + txt)
         
+    outback_dcin = 0.0
+    outback_dcout = 0.0
+    outback_current = 0.0
+    outback_kwh = 0.0
 
     def write_info(self, data_stream):
         if len(data_stream) < 1:
