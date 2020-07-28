@@ -213,7 +213,7 @@ class MainWindow(QMainWindow):
     outback_dcout = ''
     outback_current = ''
     outback_kwh = ''
-    self.PV1volt = ''
+    PV1volt = ''
 
     def write_info(self, data_stream):
         if len(data_stream) < 1:
